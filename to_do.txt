@@ -1,0 +1,118 @@
+
+REDA:
+	01_ the line with '(' is not freed // now it '0x07'
+	02_ if(here_doc handle change) // This a note so you don't forget
+		--> you will also need to fix: 
+		-->	void    setup_redirections(t_redir *redir)
+	
+============================================================================
+
+echo -
+export a="ls -" && $a''l
+
+?? minishell wst minishell --> ctrl + \ ??
+
+When merge :: 
+void	exp_var(char **exp_data, char *dt, size_t *i, t_shell *the_shell)
+in exe util 2
+	if (!cmd->args[0] || cmd->cmd[0] == '\0')
+
+-- done last_fixes _ branch --
+01_ heredoc -- ctrl + c
+02_ builtins/
+	bash: builtins/: is a directory
+	bash-3.2$ echo $?
+	126
+
+-- done ---
+1_ ./minishell should execute if in the same oflder
+2_ why $? is not working
+3_ signals
+4_ fixed unset
+	minishell$ unset -asd -das +da pp;;
+	minishell: unset: `-asd': not a valid identifier
+	minishell: unset: `+da': not a valid identifier
+	/Users/eghalime/Desktop/Rida_mini minishell$
+5_ $ ""
+6_$ ""
+$ ""
+$ ""
+$ ""
+$ ""
+$ ""
+$ ""
+7_ echo >> ""
+	open: Bad address
+8_ if ctl+d is sent to here_doc no return to line
+9_ ifå
+	$ ./minishell | ./minishell
+	use (istty) of this
+10_ Check what happens if everything is unset
+11_ ( to 0x07 in pasing
+12_ $asdfasdf
+	expand this to "" i.e. '\0'
+	not null
+13_ if $ minishell file.sh
+14_ CTL + D write exit
+15_ CTL + C return to line in top
+
+__ done old ___
+------- 5_ fix: heredoc
+   fix: redirections
+------- 6_ SHLVL shoud increment
+------- 9_ make an enum for exported_with_equal_sign
+------- 9_ make an enum for exported_with_equal_sign
+------- 12_ make an enum for get_set_return
+------- 11_ in main function:
+------- 6_ SHLVL shoud increment
+       if (!line)
+        {
+			// here call exit()
+        }
+------ 8_ signals
+		# delete the return value from the t_shell
+		--function set exit status and get
+			int static exit_status = 0
+------ X_ The minishell should execute abselute paths
+------ 1_ a function that frees the env
+------ X_ echo >> file_name -n hello // test if you don't remmeber
+------ 2_ if one command and builtin == run in parent
+------ 3_ fix builtin cd (it's working to a sertain extent)
+------ 7_ builtin should return exit value
+------ 10_ make an enum for error return values
+------ 3_ echo 123(1234 == bash: syntax error near unexpected token `('
+------ 1_ Reda: stop openning fds
+	Reda: " $USER" does not expand
+		by extention: cd $HOME/path
+	while expending if the expendee is $? == check the sheell->return_value
+		this value should be expended as well
+------ 2_ Reda: $?
+------ 4_ set return_value in case the command fails
+
+
+
+
+
+
+
+===========================tests==================================
+
+/Users/eghalime/Desktop/Rida_mini minishell$ echo -nnnn -n as
+-n as/Users/eghalime/Desktop/Rida_mini minishell$ 
+
+
+=====================
+
+if you want to handle it => don't unset '_'
+
+======================
+
+
+
+
+======================
+
+
+
+
+
