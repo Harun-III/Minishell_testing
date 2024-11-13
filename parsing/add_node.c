@@ -62,7 +62,7 @@ t_cmd	*cr_cmd( bool type, const char *cmd, char **args, t_redir *redir, t_mem **
 	t_cmd	*command;
 
 	command = (t_cmd *)my_malloc(manager, sizeof(t_cmd));
-	if (!command || ft_strcmp(cmd, "\'") == 0)
+	if (!command || ft_strcmp(cmd, (char []){0x06, '\0'}) == 0)
 		return (NULL);
 	command->type = type;
 	command->cmd = ft_strdup_mm(manager, cmd);

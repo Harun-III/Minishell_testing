@@ -1,16 +1,268 @@
 
-REDA:
-	01_ the line with '(' is not freed // now it '0x07'
-	02_ if(here_doc handle change) // This a note so you don't forget
-		--> you will also need to fix: 
-		-->	void    setup_redirections(t_redir *redir)
-	
+============================================================================
+minishell$ exit "hello and "
+exit
+exit: hello: numeric argument required
+
+bash$ exit "hello an d"
+exit
+bash: exit: hello an d: numeric argument required
 ============================================================================
 
-echo -
-export a="ls -" && $a''l
+============================================================================
+linkeg problem with the make files
+============================================================================
 
-?? minishell wst minishell --> ctrl + \ ??
+============================================================================
+fix the signals.
+in signals if ctr + c in child all fds should be closed
+============================================================================
+============================================================================
+	fix all :
+	{
+		minishell$ export a="ls -"
+		minishell$ $a"l"
+
+		minishell$ export a='"'
+		minishell$ echo $a
+
+	
+		minishell$ export a=' '
+		minishell$ $a
+		Command not found:
+	}
+	prob 
+	{
+		———————————— builtins
+============================================================================
+note (eghalime) :: I don't get this
+		prob in env : 
+		The last export is not saved; it always saves the first one.
+============================================================================
+		minishell$ export a="ls -"
+		minishell$ $a''l
+
+		bash-3.2$ ls -z
+		ls: illegal option -- z
+		usage: ls [-@ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1%] [file ...]
+
+note (eghalime) :: this is because of the following:
+// minishell$ export a="ls -l"
+// minishell$ echo $a
+// ls -l
+// minishell$ echo $a | cat -e
+// ls ^D-l$
+============================================================================
+
+============================================================================
+		bash :
+		bash-3.2$ echo $ 
+		$
+		bash-3.2$ 
+
+
+		minshell :
+		minishell$ echo $
+
+		minishell$ 
+
+
+============================================================================
+==============================================
+		bash :
+		bash-3.2$ echo "|"
+		|
+
+		minshell :
+		minishell$ echo "|"
+		minishell: : command not found
+
+
+============================================================================
+
+==============================================
+		bash :
+		bash-3.2$ "echo test      tout"
+		bash: echo test      tout: command not found
+
+		minshell :
+		minishell$ "echo test      tout"
+		test tout
+
+
+============================================================================
+
+
+===========================================================================
+		bash :
+		bash-3.2$ echo - "" "  " hello 
+		-     hello
+
+		minshell :
+		minishell$ echo - "" "  " hello 
+		minishell$ 
+===========================================================================
+
+———————————— signals
+===========================================================================
+bash-3.2$ cat | ls
+42-EXAM         Documents       Pictures        ls              reda
+Applications    Downloads       a.out           main.c
+Cleaner_42      Library         bash            me
+Cleaner_42.sh   Movies          francinette     pubkey
+Desktop         Music           goinfre         pubkey.pub
+^C
+bash-3.2$ echo $?
+0
+bash-3.2$ 
+
+minshell :
+minishell$ cat | ls
+42-EXAM         Documents       Pictures        ls              reda
+Applications    Downloads       a.out           main.c
+Cleaner_42      Library         bash            me
+Cleaner_42.sh   Movies          francinette     pubkey
+Desktop         Music           goinfre         pubkey.pub
+^C
+minishell$ echo $?
+130
+minishell$ 
+
+———————————— extras
+============================================================================
+		bash :
+		bash-3.2$ ./test_files/invalid_permission 
+		bash: ./test_files/invalid_permission: Permission denied
+		bash-3.2$ echo $?
+		126
+
+		minshell :
+		minishell$ ./test_file./test_files/invalid_permission 
+		Minishell: ./test_files/invalid_permission: No such file or directory
+		minishell$ echo $?
+		127
+============================================================================
+
+============================================================================
+		bash :
+		bash-3.2$ $PWD
+		bash: /Users/rbouizer/Desktop/minishell: is a directory
+		bash-3.2$ echo $?
+		126
+
+		minshell :
+		minishell$ $PWD
+		Minishell: /Users/rbouizer/Desktop/minishell is a directory
+		minishell$ echo $?
+		127
+
+============================================================================
+============================================================================
+		bash :
+		bash-3.2$ ./test_files 
+		bash: ./test_files: is a directory
+		bash-3.2$ echo $?
+		126
+
+		minshell :
+		minishell$ ./test_files 
+		Minishell: ./test_files is a directory
+		minishell$ echo $?
+		127
+
+============================================================================
+
+	// 01_ the line with '(' is not freed // now it '0x07'
+	// 02_ if(here_doc handle change) // This a note so you don't forget
+		--> you will also need to fix: 
+		-->	void    setup_redirections(t_redir *redir)
+	03_ in this file parsing/create_shell_utils.c	
+		t_redir	*handle_redirec(t_token *cp, char *cmd, t_mem **mana)
+		does nothing.
+	--> onece the obove is fix:
+	this is an idea to fix, heredoc:
+	// open file twice one read only (send it to excution)
+	// and one write only (write with it, unlink the file, and close it)
+	functino blow in file: parsing/here_doc.c
+	int	handle_here_doc(t_token *token)
+	{
+		int				fd[2];
+		pid_t			pid;
+		int				status;
+		struct termios	or;
+		char			*del;
+
+		while (token->next && ft_strcmp(token->next->data.origin, "\0") == 0)
+			token = token->next;
+		del = token->next->data.origin;
+		// fixing
+		fd[0] = open_file("/tmp/.here_doc", O_WRONLY | O_CREAT | O_TRUNC);
+		if (!token->next || !del || fd[0] == -1)
+			return (0);
+		// fixing
+		fd[1] = open_file("/tmp/.here_doc", O_RDONLY);
+		(1) && (token->data.fd = fd[0], token->data.type_fd = token->type);
+		(2) && (tcgetattr(STDIN_FILENO, &or), pid = fork());
+		if (pid == -1)
+			return (close(fd[0]), 0);
+		if (pid == 0)
+			here_doc_child_process(fd[0], del);
+		(2) && (waitpid(pid, &status, 0), tcsetattr(STDIN_FILENO, TCSANOW, &or));
+		if (g_received_signal == 0)
+			get_set_return(WEXITSTATUS(status), SET_EXIT_STATUS);
+		else
+			return (close(fd[0]), close(fd[1]), unlink("/tmp/.here_doc"), 0);
+		// fixing
+		close(fd[0]);
+
+		// here the tredir should be set the fd[1]
+
+		return (1);
+	}
+	04_ Once this is fixed fix, signals
+	tests:
+		minishell$ cat << .
+		> 
+		Quit: 3
+		minishell$ echo $?
+		130
+		minishell$ cat << .
+		> 
+		minishell$ echo $?
+		130
+============================================================================
+=fixed===========================================================================
+———————————— in redirects
+		bash :
+		bash-3.2$ echo <"./test_files/infile" <missing <"./test_files/infile" 
+		bash: ./test_files/infile: No such file or directory
+		bash-3.2$ echo $?
+		1
+
+		minshell :
+		minishell$ echo <"./test_files/infile" <missing <"./test_files/infile" 
+		open: No such file or directory
+
+		minishell$ echo $?
+		0
+		minishell$ 
+
+
+=========================================================================================================
+=fixed===========================================================================
+		bash :
+		(bash-3.2$ exit +100 ) (bash-3.2$ exit +"100") (bash-3.2$  exit "+100")
+		exit
+
+		minshell :
+		(minishell$ exit +100) (bash-3.2$ exit +"100") (bash-3.2$  exit "+100")
+		exit
+		exit: +100: numeric argument required
+
+============================================================================
+cat | ls
+ctr + c || ctr + \ 
+echo $?
 
 When merge :: 
 void	exp_var(char **exp_data, char *dt, size_t *i, t_shell *the_shell)
@@ -23,6 +275,9 @@ in exe util 2
 	bash: builtins/: is a directory
 	bash-3.2$ echo $?
 	126
+03_ echo -
+
+?? minishell wst minishell --> ctrl + \ ??
 
 -- done ---
 1_ ./minishell should execute if in the same oflder
@@ -112,7 +367,4 @@ if you want to handle it => don't unset '_'
 
 ======================
 
-
-
-
-
+/Users/rbouizer/.Trash/test_dir

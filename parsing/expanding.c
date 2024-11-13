@@ -6,7 +6,7 @@
 /*   By: rbouizer <rbouizer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 19:49:37 by rbouizer          #+#    #+#             */
-/*   Updated: 2024/10/28 13:16:35 by rbouizer         ###   ########.fr       */
+/*   Updated: 2024/11/10 17:13:31 by rbouizer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*ft_var(char *data, t_env *my_env, t_mem **manager)
 			return (ft_strdup_mm(manager, env->value));
 		env = env->next;
 	}
-	return (ft_strdup_mm(manager, "\'"));
+	return (ft_strdup_mm(manager, (char []){0x06, '\0'}));
 }
 
 void	exp_dat(char **expanded_data, char *new_data, t_mem **manager)
@@ -76,7 +76,7 @@ char	*expand_token_data(t_token *tokens, t_shell *the_shell, t_mem **manager)
 	char	temp[2];
 
 	expanded_data = ft_strdup_mm(manager, "");
-	(1) && (data = tokens->data.origin,  i = 0);
+	(1) && (data = tokens->data.origin, i = 0);
 	if (!expanded_data)
 		return (NULL);
 	while (data[i] != '\0')
@@ -85,7 +85,7 @@ char	*expand_token_data(t_token *tokens, t_shell *the_shell, t_mem **manager)
 		{
 			i++;
 			if (data[i] == '\0')
-				break;
+				break ;
 			exp_var(&expanded_data, data, &i, the_shell);
 		}
 		else
@@ -96,4 +96,3 @@ char	*expand_token_data(t_token *tokens, t_shell *the_shell, t_mem **manager)
 	}
 	return (expanded_data);
 }
-

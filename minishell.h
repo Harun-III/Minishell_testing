@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eghalime <eghalime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rbouizer <rbouizer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 03:27:15 by rbouizer          #+#    #+#             */
-/*   Updated: 2024/10/31 14:10:52 by eghalime         ###   ########.fr       */
+/*   Updated: 2024/11/11 00:25:56 by rbouizer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,6 +259,7 @@ int		builtin_unset(char **args, t_env **my_env, int *exit_status);
 int		builtin_env(t_env *env);
 int		builtin_exit(char **args, t_shell *the_shell);
 bool	check_if_arg_is_valid(char *arg);
+void	removeC(char** str);
 
 // void    process_commands(t_shell *shell);
 /*****************************/

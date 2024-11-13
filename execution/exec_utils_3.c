@@ -6,7 +6,7 @@
 /*   By: eghalime <eghalime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:49:59 by eghalime          #+#    #+#             */
-/*   Updated: 2024/10/30 18:35:48 by eghalime         ###   ########.fr       */
+/*   Updated: 2024/11/12 22:30:20 by eghalime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,11 @@ void	execute_builtin_command(t_shell *shell, t_cmd *cmd)
 
 	stdin_copy = dup(STDIN_FILENO);
 	stdout_copy = dup(STDOUT_FILENO);
-	setup_redirections(cmd->redir);
+	if (setup_redirections(cmd->redir) == -2)
+	{
+		get_set_return(1, 1);
+		return ;
+	}
 	exit_status = execute_builtin(shell, cmd);
 	if (g_received_signal == 0)
 		get_set_return(exit_status, 1);

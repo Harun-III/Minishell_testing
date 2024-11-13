@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_env_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eghalime <eghalime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rbouizer <rbouizer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 09:34:05 by eghalime          #+#    #+#             */
-/*   Updated: 2024/10/07 09:38:00 by eghalime         ###   ########.fr       */
+/*   Updated: 2024/11/10 20:58:58 by rbouizer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_env	*find_env_var(t_env *env, const char *var)
 {
 	while (env)
 	{
-		if (strcmp(env->var, var) == 0)
+		if (ft_strcmp(env->var, var) == 0)
 			return (env);
 		env = env->next;
 	}

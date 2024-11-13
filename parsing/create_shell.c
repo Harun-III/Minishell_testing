@@ -6,7 +6,7 @@
 /*   By: rbouizer <rbouizer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 20:25:52 by rbouizer          #+#    #+#             */
-/*   Updated: 2024/10/28 11:38:34 by rbouizer         ###   ########.fr       */
+/*   Updated: 2024/11/10 17:48:56 by rbouizer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,5 +100,6 @@ int	create_shell(t_token *tokens, t_shell **the_shell)
 		return (0);
 	if (!cr_shell(the_shell, cmd))
 		return (0);
+	//print_cmd(cmd);
 	return (1);
 }

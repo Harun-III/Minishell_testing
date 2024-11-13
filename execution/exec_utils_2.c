@@ -6,21 +6,61 @@
 /*   By: eghalime <eghalime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 15:30:23 by eghalime          #+#    #+#             */
-/*   Updated: 2024/10/30 18:37:51 by eghalime         ###   ########.fr       */
+/*   Updated: 2024/11/12 22:28:15 by eghalime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+//add by Reda
+void removeC(char **str)
+{
+    int i = 0;
+    int j = 0;
+    int k = 0;
+
+    if (str == NULL)
+        return;
+    while (str[i] != NULL)
+    {
+        if (str[i] == NULL)
+        {
+            i++;
+            continue;
+        }
+        j = 0;
+        k = 0;
+        if (str[i] == NULL || str[i][0] == '\0')
+        {
+            i++;
+            continue;
+        }
+        while (str[i][j] != '\0')
+        {
+            if (str[i][j] != 0x04)
+                str[i][k++] = str[i][j];
+            j++;
+        }
+        str[i][k] = '\0';
+        i++;
+    }
+}
+//
+
 void	execute_external_command(t_shell *shell, t_cmd *cmd)
 {
 	pid_t	pid;
 	int		status;
+	int		exit_status;
 
+	//add by Reda
+	removeC(cmd->args);
+	//
 	pid = fork();
 	if (pid == 0)
 	{
-		if (setup_redirections(cmd->redir) == 1)
+		exit_status = setup_redirections(cmd->redir);
+		if (exit_status == 1 || exit_status == -2)
 			exit (1);
 		execute_command(shell, cmd);
 	}

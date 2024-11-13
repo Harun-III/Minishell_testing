@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eghalime <eghalime@student.42.fr>          +#+  +:+       +#+         #
+#    By: rbouizer <rbouizer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/12 03:23:16 by rbouizer          #+#    #+#              #
-#    Updated: 2024/10/31 09:13:28 by eghalime         ###   ########.fr        #
+#    Updated: 2024/11/10 18:43:08 by rbouizer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,7 +64,7 @@ OBJS = $(SRCS:.c=.o)
 
 # CFLAGS = -Wall -Wextra -Werror -fsanitize=address
 LDFLAGS = $(shell brew --prefix readline)
-CFLAGS = -Wall -Wextra -Werror -g -I $(LDFLAGS)/include #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g -I $(LDFLAGS)/include -fsanitize=address
 
 LIBFT = libft/libft.a
 

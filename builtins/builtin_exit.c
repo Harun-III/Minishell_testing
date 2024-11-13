@@ -6,49 +6,39 @@
 /*   By: eghalime <eghalime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 14:21:43 by eghalime          #+#    #+#             */
-/*   Updated: 2024/10/19 18:34:39 by eghalime         ###   ########.fr       */
+/*   Updated: 2024/11/12 23:27:23 by eghalime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/*
-** why (num > LONG_MAX / 10) ::
-**		If num is greater than LONG_MAX / 10, multiplying it 
-**		by 10 will definitely result in a number larger than LONG_MAX
-**	(num == LONG_MAX / 10 && (str[i] - '0') > LONG_MAX % 10))
-** The (num == LONG_MAX / 10)
-**		checks for a boundary, so there is a place for ony one added digit
-**	so we check the added digit ("(str[i] - '0') > LONG_MAX % 10)")
-*/
-
-static bool	is_valid_number(char *str, long *result)
+static bool is_valid_number(char *str, long *result)
 {
-	int		i;
-	int		sign;
-	long	num;
+    int i;
+    int sign;
+    long num;
 
-	i = 0 ;
-	num = 0;
-	sign = 1;
-	if (!str || !*str)
-		return (false);
-	if (str[i] == '-')
-		(1) && (sign = -1, i++);
-	if (!str[i])
-		return (false);
-	while (str[i])
-	{
-		if (!(str[i] >= '0' && str[i] <= '9'))
-			return (false);
-		if (num > LONG_MAX / 10
-			|| (num == LONG_MAX / 10 && (str[i] - '0') > LONG_MAX % 10))
-			return (false);
-		num = (num * 10) + (str[i] - '0');
-		i++;
-	}
-	*result = num * sign;
-	return (true);
+	(1) && (i = 0, num = 0, sign = 1);
+    if (!str || !*str)
+        return (false);
+    if (str[i] == '+' || str[i] == '-')
+    {
+        if (str[i] == '-')
+            sign = -1;
+        i++;
+    }
+    if (!str[i] || str[i] == '+' || str[i] == '-')
+        return (false);
+    while (str[i])
+    {
+        if (!(str[i] >= '0' && str[i] <= '9'))
+            return (false);
+        if (num > LONG_MAX / 10 || 
+            (num == LONG_MAX / 10 && (str[i] - '0') > LONG_MAX % 10))
+            return (false);
+        (1) && (num = (num * 10) + (str[i] - '0'), i++);
+    }
+    return (*result = num * sign, true);
 }
 
 int	builtin_exit(char **args, t_shell *the_shell)

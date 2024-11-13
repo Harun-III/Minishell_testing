@@ -6,7 +6,7 @@
 /*   By: eghalime <eghalime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 15:09:06 by eghalime          #+#    #+#             */
-/*   Updated: 2024/10/30 18:38:04 by eghalime         ###   ########.fr       */
+/*   Updated: 2024/11/12 22:29:31 by eghalime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,12 @@ static int	hand_here_doc_in_execution(int here_fd)
 	return (0);
 }
 
-static void	set_flags_and_targetfd(t_type fd_type, int *target_fd, int *flags)
+static int	set_flags_and_targetfd(t_type fd_type, int *target_fd, int *flags, char *path)
 {
 	if (fd_type == IN)
 	{
+		if (access(path, R_OK) == -1)
+			return (-2);
 		*flags = O_RDONLY;
 		*target_fd = STDIN_FILENO;
 	}
@@ -61,6 +63,7 @@ static void	set_flags_and_targetfd(t_type fd_type, int *target_fd, int *flags)
 		*flags = O_WRONLY | O_CREAT | O_APPEND;
 		*target_fd = STDOUT_FILENO;
 	}
+	return (0);
 }
 
 int	setup_redirections(t_redir *redir)
@@ -78,9 +81,13 @@ int	setup_redirections(t_redir *redir)
 			redir = redir->next;
 			continue ;
 		}
-		set_flags_and_targetfd (redir->type, &target_fd, &flags);
 		if (!redir->file || !redir->file[0])
 			return (ft_putendl_fd(ERR_NO_F_OR_D, 2), 1);
+		if (set_flags_and_targetfd (redir->type, &target_fd, &flags, redir->file) == -2)
+		{
+			ft_sandwitch_err("minishell: ", redir->file, STR_NO_FILE_OR_DIR);
+			return (-2);
+		}
 		fd = open(redir->file, flags, 0644);
 		if (fd == -1)
 			return (perror("open"), 1);

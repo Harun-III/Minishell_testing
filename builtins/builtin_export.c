@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eghalime <eghalime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rbouizer <rbouizer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:04:20 by eghalime          #+#    #+#             */
-/*   Updated: 2024/10/15 12:09:23 by eghalime         ###   ########.fr       */
+/*   Updated: 2024/11/11 00:46:42 by rbouizer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,31 @@ void	print_sorted_environment(t_env **my_env)
 	print_sorted_env(env_array, env_count);
 	free(env_array);
 }
+//add by Reda
+char **ft_fixexport(char **args)
+{
+    int i = 0;
+    while (args[i] != NULL && args[i + 1] != NULL)
+    {
+        if ((unsigned char)args[i + 1][0] == 0x04)
+        {
+            char *new_arg = ft_strjoin(args[i], " ");
+            char *combined = ft_strjoin(new_arg, ft_strchr(args[i + 1], 0x04) + 1);
+            args[i] = combined;
+            while (args[i + 1] != NULL)
+            {
+                args[i + 1] = args[i + 2];
+                i++;
+            }
+        }
+        else
+        {
+            i++;
+        }
+    }
+    return args;
+}
+//
 
 void	builtin_export(char **args, t_env **my_env)
 {
@@ -112,6 +137,9 @@ void	builtin_export(char **args, t_env **my_env)
 	else
 	{
 		i = 0;
+		//add by Reda
+		args = ft_fixexport(args);
+		//
 		while (args[++i] != NULL)
 		{
 			str = ft_strdup(args[i]);
